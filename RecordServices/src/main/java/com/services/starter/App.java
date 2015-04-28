@@ -1,13 +1,26 @@
 package com.services.starter;
 
-/**
- * Hello world!
- *
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+/*
+ * Starter Class
+ * @author Shahbaz.Alam
  */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+@Configuration
+@EnableAutoConfiguration
+@ComponentScan("com.services")
+public class App{
+   
+	public static void main( String[] args ){
+		String webPort = System.getenv("PORT");
+		if (webPort == null || webPort.isEmpty()) {
+			webPort = "5050";
+		}
+		System.setProperty("server.port", webPort);
+
+		SpringApplication.run(App.class, args);
     }
 }
