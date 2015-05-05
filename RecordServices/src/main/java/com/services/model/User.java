@@ -1,11 +1,14 @@
 package com.services.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /*
  * This is a User Object
  * It holds the Details of the user
  * 
  * @author Shahbaz.Alam
  */
+@XmlRootElement
 public class User {
 	
 	private String fullName;

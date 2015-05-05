@@ -1,8 +1,11 @@
 package com.services.manager;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.services.dao.UserDao;
+import com.services.exception.DaoException;
 import com.services.exception.UserManagerException;
 import com.services.model.User;
 
@@ -24,18 +27,30 @@ public class UserManager {
 	 * that there is no such user
 	 */
 	public User validateUser(String userName, String password) throws UserManagerException{
-		User user = userDao.getUser(userName, password);
-		
+		User user = null;
+		try{
+			user = userDao.getUser(userName, password);
+		}catch(DaoException ex){
+			throw new UserManagerException("DaoException Caught in ValidateUser", ex);
+		}		
 		return user;		
 	}
 	
 	
 	/*
 	 * This method adds a User into the User Table. It calls the UserDao
-	 * for the operation
+	 * for the operation. If the user is updated the userAdded flag is set to be true
+	 * 
+	 * @return boolean
 	 */
-	public void addUser(User user) throws UserManagerException{
-		userDao.addUser(user);
+	public int addUser(User user) throws UserManagerException{
+		int result = 0;
+		try{
+			result = userDao.addUser(user);
+		}catch(DaoException ex){
+			throw new UserManagerException("DaoException Caught in AddUser", ex);
+		}
+		return result;
 	}
 	
 	/*
@@ -43,7 +58,26 @@ public class UserManager {
 	 * for the operation
 	 */
 	public void removeUser(User user) throws UserManagerException{
-		userDao.removeUser(user);
+		try{
+			userDao.removeUser(user);
+		}catch(DaoException ex){
+			throw new UserManagerException("DaoException Caught in RemoveUser", ex);
+		}
+	}
+	
+	/*
+	 * This method retrieves all the users
+	 * 
+	 * @return List<User>
+	 */
+	public List<User> getAllUser() throws UserManagerException{
+		List<User> listUsers = null;
+		try{
+			listUsers = userDao.getAllUser();
+		}catch(DaoException ex){
+			throw new UserManagerException("DaoException Caught in GetAllUser", ex);
+		}		
+		return listUsers;
 	}
 	
 
