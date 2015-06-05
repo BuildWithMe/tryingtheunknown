@@ -5,7 +5,10 @@ import java.util.Calendar;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-/*
+import com.services.common.PaymentMode;
+import com.services.common.PaymentStatus;
+
+/**
  * This is a domain object for a single record in the database
  * 
  * @author Shahbaz.Alam
@@ -17,7 +20,7 @@ public class Record {
 	
 	private String purchaserName;
 	
-	private String verticalNbr;
+	private String vehicleNbr;
 	
 	private String cropName;
 	
@@ -36,8 +39,48 @@ public class Record {
 	private BigDecimal supervisionFee;
 	
 	private BigDecimal totalTax;
+	
+	private Calendar paidDate;
+	
+	private PaymentMode pymtMd;
+	
+	private PaymentStatus pymtStatus;
+	
+	private String checqueNbr;	
 
 	
+	public Calendar getPaidDate() {
+		return paidDate;
+	}
+
+	public void setPaidDate(Calendar paidDate) {
+		this.paidDate = paidDate;
+	}
+
+	public PaymentMode getPymtMd() {
+		return pymtMd;
+	}
+
+	public void setPymtMd(PaymentMode pymtMd) {
+		this.pymtMd = pymtMd;
+	}
+
+	public PaymentStatus getPymtStatus() {
+		return pymtStatus;
+	}
+
+	public void setPymtStatus(PaymentStatus pymtStatus) {
+		this.pymtStatus = pymtStatus;
+	}
+
+	public String getChecqueNbr() {
+		return checqueNbr;
+	}
+
+	public void setChecqueNbr(String checqueNbr) {
+		this.checqueNbr = checqueNbr;
+	}
+
 	public Calendar getDate() {
 		return date;
 	}
@@ -54,12 +97,12 @@ public class Record {
 		this.purchaserName = purchaserName;
 	}
 
-	public String getVerticalNbr() {
-		return verticalNbr;
+	public String getVehicleNbr() {
+		return vehicleNbr;
 	}
 
-	public void setVerticalNbr(String verticalNbr) {
-		this.verticalNbr = verticalNbr;
+	public void setVehicleNbr(String vehicleNbr) {
+		this.vehicleNbr = vehicleNbr;
 	}
 
 	public String getCropName() {

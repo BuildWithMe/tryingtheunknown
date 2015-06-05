@@ -1,7 +1,7 @@
 package com.services.common;
 
 
-/*
+/**
  * List of All JDBC Queries
  * 
  * @author Shahbaz.Alam

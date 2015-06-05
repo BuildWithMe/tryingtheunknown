@@ -10,7 +10,7 @@ import com.services.exception.DaoException;
 import com.services.exception.RecordManagerException;
 import com.services.model.Record;
 
-/*
+/**
  * This is a central point for all Record related operations
  * 
  * @author Shahbaz.Alam
@@ -20,7 +20,7 @@ public class RecordManager {
 	@Autowired
 	private RecordDao recordDao;
 	
-	/*
+	/**
 	 * The method takes the Record object and passes on to the Dao
 	 * If the Update is successful, it fetches all the list of records
 	 * for that particular date and returns
@@ -39,6 +39,19 @@ public class RecordManager {
 		}		
 		return listRecords;
 	}
+	
+	/**
+	 * This method will delete the Record from the DB. It takes in the 
+	 * Record ID and passes on to the Dao Layer.
+	 * 
+	 * @param recordId
+	 */
+	public void deleteRecord(BigDecimal recordId) throws RecordManagerException{
+		
+	}
+	
+	
+	
 
 	private void calculateOtherFieldsOfRecord(Record record) {
 		if(record.getNetWeight() != null 

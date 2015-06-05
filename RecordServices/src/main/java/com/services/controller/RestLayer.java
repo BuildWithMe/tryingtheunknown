@@ -1,5 +1,6 @@
 package com.services.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import com.services.manager.UserManager;
 import com.services.model.Record;
 import com.services.model.User;
 
-/*
+/**
  * This class acts as the central layer for all rest exposed methods
  * 
  * @author Shahbaz.Alam
@@ -38,7 +39,7 @@ public class RestLayer {
 	@Autowired
 	private RecordManager recordManager;
 	
-	/*
+	/**
 	 * This is a Get Service which takes the username and password and pass it 
 	 * to the validation method
 	 * 
@@ -62,7 +63,7 @@ public class RestLayer {
 		return new ResponseEntity<Object>(user, HttpStatus.OK);
 	}
 	
-	/*
+	/**
 	 * This is a post service which takes the User object from the
 	 * Request Body. It passes the User Object to the manager for adding it to
 	 * the User Table
@@ -82,7 +83,7 @@ public class RestLayer {
 		return new ResponseEntity<String>("Successfully Added", HttpStatus.OK);
 	}
 	
-	/*
+	/**
 	 * This is a post service which takes the User object from the
 	 * Request Body. It passes the User Object to the manager for removing it from
 	 * the User Table
@@ -99,7 +100,7 @@ public class RestLayer {
 		return new ResponseEntity<String>("Successfully Removed", HttpStatus.OK);
 	}
 	
-	/*
+	/**
 	 * This is a Get Service which will return all the list of Users
 	 * 
 	 * @return List<User>
@@ -116,7 +117,7 @@ public class RestLayer {
 		return new ResponseEntity<List<User>>(listUsers,HttpStatus.OK);
 	}
 	
-	/*
+	/**
 	 * This is a Get Service which will return all the list of Purchaser Name
 	 */
 	@RequestMapping(value = "/getAllPurchaser" , method = RequestMethod.GET)
@@ -131,7 +132,7 @@ public class RestLayer {
 		return new ResponseEntity<List<String>>(listPurchasers,HttpStatus.OK);		
 	}
 	
-	/*
+	/**
 	 * This is a post service which takes the Purchaser Name from the
 	 * Url path. It passes the purchaser to the manager for removing it from
 	 * the Purchaser Table
@@ -148,7 +149,7 @@ public class RestLayer {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	/*
+	/**
 	 * This is a post service which takes the Purchaser Name from the
 	 * Url path. It passes the purchaser to the manager for adding it to
 	 * the Purchaser Table
@@ -164,11 +165,12 @@ public class RestLayer {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	/*
+	/**
 	 * This is a Post Service to add a Record. It takes the Record Object from the
 	 * Request Body. It also returns the List of Records entered for the present
 	 * Date
 	 */
+	@RequestMapping(value="/saveRecord", method = RequestMethod.POST)
 	public ResponseEntity<List<Record>> saveRecord(@RequestBody Record record){
 		List<Record> listRecord = null;
 		if(record == null){
@@ -181,6 +183,20 @@ public class RestLayer {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(listRecord,HttpStatus.OK);
+	}
+	
+	/**
+	 * This is a Delete Service to delete a record. It takes the RecordId from the
+	 * URL. It returns a success status on successful deletion
+	 */
+	public ResponseEntity<?> deleteRecord(@PathVariable BigDecimal recordId){
+		try{
+			recordManager.deleteRecord(recordId);
+		}catch(RecordManagerException ex){
+			System.out.println("Exception Caught in RecordManager.DeleteRecords"+ex);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	
