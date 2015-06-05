@@ -50,6 +50,17 @@ public class RecordManager {
 		
 	}
 	
+	/**
+	 * This method will update the Record in the DB
+	 * It takes the Record object, primarily containing Record Id,
+	 * Payment Date, Payment Status and Payment Mode
+	 * 
+	 * @param record
+	 */
+	public void updateRecord(Record record) throws RecordManagerException{
+		
+	}
+	
 	
 	
 

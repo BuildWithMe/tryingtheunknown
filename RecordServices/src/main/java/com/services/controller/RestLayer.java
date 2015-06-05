@@ -189,11 +189,27 @@ public class RestLayer {
 	 * This is a Delete Service to delete a record. It takes the RecordId from the
 	 * URL. It returns a success status on successful deletion
 	 */
+	@RequestMapping(value="/deleteRecord/recordId/{recordId}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteRecord(@PathVariable BigDecimal recordId){
 		try{
 			recordManager.deleteRecord(recordId);
 		}catch(RecordManagerException ex){
 			System.out.println("Exception Caught in RecordManager.DeleteRecords"+ex);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	/**
+	 * This is a post service to update a Record. It takes the Record Object
+	 * from the Request Body and passes on to the Manager for updating
+	 */
+	@RequestMapping(value="/updateRecord", method = RequestMethod.POST)
+	public ResponseEntity<?> updateRecord(@RequestBody Record record){
+		try{
+			recordManager.updateRecord(record);
+		}catch(RecordManagerException ex){
+			System.out.println("Exception Caught in RecordManager.UpdateRecords"+ex);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
