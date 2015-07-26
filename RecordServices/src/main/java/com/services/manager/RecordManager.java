@@ -47,7 +47,11 @@ public class RecordManager {
 	 * @param recordId
 	 */
 	public void deleteRecord(BigDecimal recordId) throws RecordManagerException{
-		
+		try{
+			recordDao.deleteRecord(recordId);
+		}catch(DaoException ex){
+			throw new RecordManagerException("DaoException Caught in deleteRecord with Record Id:"+recordId, ex);
+		}
 	}
 	
 	/**
@@ -58,6 +62,11 @@ public class RecordManager {
 	 * @param record
 	 */
 	public void updateRecord(Record record) throws RecordManagerException{
+		try{
+			recordDao.updateRecord(record);
+		}catch(DaoException ex){
+			throw new RecordManagerException("DaoException Caught in Updating Record", ex);
+		}
 		
 	}
 	

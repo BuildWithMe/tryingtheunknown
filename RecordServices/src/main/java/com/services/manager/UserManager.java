@@ -9,7 +9,7 @@ import com.services.exception.DaoException;
 import com.services.exception.UserManagerException;
 import com.services.model.User;
 
-/*
+/**
  * This is a central point for all User activities
  * 
  * @author Shahbaz.Alam
@@ -19,7 +19,7 @@ public class UserManager {
 	@Autowired
 	private UserDao userDao;
 	
-	/*
+	/**
 	 * This method validates the username and password 
 	 * against the User Table. If the username and password
 	 * are present in the table, it will fetch the corresponding 
@@ -37,7 +37,7 @@ public class UserManager {
 	}
 	
 	
-	/*
+	/**
 	 * This method adds a User into the User Table. It calls the UserDao
 	 * for the operation. If the user is updated the userAdded flag is set to be true
 	 * 
@@ -53,7 +53,7 @@ public class UserManager {
 		return result;
 	}
 	
-	/*
+	/**
 	 * This method removes a user from the User Table. It call the UserDao
 	 * for the operation
 	 */
@@ -65,7 +65,7 @@ public class UserManager {
 		}
 	}
 	
-	/*
+	/**
 	 * This method retrieves all the users
 	 * 
 	 * @return List<User>

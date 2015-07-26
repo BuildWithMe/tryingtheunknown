@@ -1,11 +1,11 @@
 package com.services.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.services.exception.DaoException;
@@ -23,6 +23,14 @@ public class RecordDao {
 	
 	public List<Record> getAllRecordForCurrentDate() throws DaoException{
 		return null;
+	}
+	
+	public void deleteRecord(BigDecimal recordId) throws DaoException{
+		
+	}
+	
+	public void updateRecord(Record record) throws DaoException{
+		
 	}
 
 }
