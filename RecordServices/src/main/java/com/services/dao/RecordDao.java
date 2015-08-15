@@ -1,13 +1,21 @@
 package com.services.dao;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.services.common.JdbcQueryConstant;
+import com.services.common.PaymentMode;
 import com.services.exception.DaoException;
 import com.services.model.Record;
 
@@ -16,21 +24,157 @@ public class RecordDao {
 	@Autowired
 	private DataSource datasource;
 	
-	public void saveRecord(Record record) throws DaoException{
+	/**
+	 * The method is used to save a single record in the Record Table
+	 * 
+	 * @param record
+	 * @throws DaoException
+	 */
+	public int saveRecord(Record record) throws DaoException{
 		JdbcTemplate template = new JdbcTemplate(datasource);
+		List<Object> paramObjs = new ArrayList<Object>();
+		paramObjs.add(formatCalendarToString(record.getDate()));
+		paramObjs.add(record.getPurchaserName());
+		paramObjs.add(record.getVehicleNbr());
+		paramObjs.add(record.getCropName());
+		paramObjs.add(record.getBagQty());
+		paramObjs.add(record.getNetWeight());
+		paramObjs.add(record.getActualWeight());
+		paramObjs.add(record.getCropRate());
+		paramObjs.add(record.getTotalCost());
+		paramObjs.add(record.getMarketFee());
+		paramObjs.add(record.getSupervisionFee());
+		paramObjs.add(record.getTotalTax());
+		paramObjs.add(formatCalendarToString(record.getPaymentDate()));
+		paramObjs.add(record.getPaymentMode());
+		paramObjs.add(record.getPaymentStatus());
+		paramObjs.add(record.getChecqueNbr());
 		
+		int result = 0;
+		try{
+			result = template.update(JdbcQueryConstant.Save_Record, paramObjs.toArray());
+		}catch(DataAccessException ex){
+			throw new DaoException("Exception in RecordDao.SaveRecord", ex);
+		}
+		return result;		
 	}
 	
-	public List<Record> getAllRecordForCurrentDate() throws DaoException{
-		return null;
+	/**
+	 * The method returns all the records in the db for a specific date 
+	 * passed from the request
+	 * 
+	 * @return List<Record>
+	 * @throws DaoException
+	 */
+	public List<Record> getAllRecordForCurrentDate(Calendar currentDate) throws DaoException{
+		JdbcTemplate template = new JdbcTemplate(datasource);
+		List<Record> listRecords = null;
+		List<Map<String, Object>> queryResult = null;
+		List<Object> paramObjs = new ArrayList<Object>();		
+		paramObjs.add(formatCalendarToString(currentDate));
+		
+		try{
+			queryResult = template.queryForList(JdbcQueryConstant.Get_All_Record_For_Current_Date, paramObjs.toArray());
+		}catch(DataAccessException ex){
+			throw new DaoException("Exception caught in RecordDao.GetAllRecordForCurrentDate", ex);
+		}
+		if(queryResult != null){
+			listRecords = getAllRecords(queryResult);
+		}
+		return listRecords;
 	}
 	
+
+	/**
+	 * The method deletes a record from the DB based on the Record ID
+	 * coming as a request param
+	 * 
+	 * @param recordId
+	 * @throws DaoException
+	 */
 	public void deleteRecord(BigDecimal recordId) throws DaoException{
+		JdbcTemplate template = new JdbcTemplate(datasource);
+		List<Object> paramObjs = new ArrayList<Object>();		
+		paramObjs.add(recordId);
 		
+		try{
+			template.update(JdbcQueryConstant.Delete_Record, paramObjs.toArray());
+		}catch(DataAccessException ex){
+			throw new DaoException("Exception caught in RecordDao.DeleteRecord", ex);
+		}
 	}
 	
-	public void updateRecord(Record record) throws DaoException{
+	/**
+	 * The method generally updates the payment details
+	 * of a record. It checks if the payment mode is by checque
+	 * then it even updates the CHECQUE_NBR column of the table
+	 * 
+	 * @param record
+	 * @return no. of row updated
+	 * @throws DaoException
+	 */
+	public int updateRecord(Record record) throws DaoException{
+		JdbcTemplate template = new JdbcTemplate(datasource);
+		List<Object> paramObjs = new ArrayList<Object>();
+		paramObjs.add(formatCalendarToString(record.getPaymentDate()));
+		paramObjs.add(record.getPaymentMode());
+		paramObjs.add(record.getPaymentStatus());
 		
+		StringBuilder sql = new StringBuilder(JdbcQueryConstant.Update_Record);
+		if(PaymentMode.CHECQUE.getId() == record.getPaymentMode()){
+			sql.append(JdbcQueryConstant.Add_Checque_Nbr);
+			paramObjs.add(record.getChecqueNbr());
+		}
+		sql.append(JdbcQueryConstant.WHERE_RECORD_ID);
+		
+		int result = 0;
+		try{
+			result = template.update(sql.toString(), paramObjs.toArray());
+		}catch(DataAccessException ex){
+			throw new DaoException("Exception caught in RecordDao.UpdateRecord", ex);
+		}
+		return result;		
+	}
+	
+	private List<Record> getAllRecords(List<Map<String, Object>> queryResult) {
+		List<Record> listRecord = new ArrayList<Record>();
+		Record record = null;
+		for(Map<String, Object> map : queryResult){
+			record = new Record();
+			record.setRecordId((BigDecimal) map.get("RECORD_ID"));
+			record.setDate(getCalendar((Date) map.get("DATE")));
+			record.setPurchaserName((String) map.get("PURCHASER_NAME"));
+			record.setVehicleNbr((String) map.get("VEHICLE_NBR"));
+			record.setCropName((String) map.get("CROP_NAME"));
+			record.setBagQty((BigDecimal) map.get("BAG_QTY"));
+			record.setNetWeight((BigDecimal) map.get("NET_WEIGHT"));
+			record.setActualWeight((BigDecimal) map.get("ACTUAL_WEIGHT"));
+			record.setCropRate((BigDecimal) map.get("CROP_RATE"));
+			record.setTotalCost((BigDecimal) map.get("TOTAL_COST"));
+			record.setMarketFee((BigDecimal) map.get("MARKET_FEE"));
+			record.setSupervisionFee((BigDecimal) map.get("SUPERVISION_FEE"));
+			record.setTotalTax((BigDecimal) map.get("TOTAL_TAX"));
+			record.setPaymentDate(getCalendar((Date) map.get("PAYMENT_DATE")));
+			record.setPaymentMode((Integer) map.get("PAYMENT_MODE"));
+			record.setPaymentStatus((String) map.get("PAYMENT_STATUS"));
+			record.setChecqueNbr((String) map.get("CHECQUE_NBR"));
+			listRecord.add(record);
+		}
+		return listRecord;
+	}
+	
+	private String formatCalendarToString(Calendar cal){
+		if(cal == null){
+			return null;
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY");
+		return sdf.format(cal.getTime());
+	}
+	
+	private Calendar getCalendar(Date date){
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return cal;
 	}
 
 }

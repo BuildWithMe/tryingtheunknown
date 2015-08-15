@@ -206,8 +206,12 @@ public class RestLayer {
 	 */
 	@RequestMapping(value="/updateRecord", method = RequestMethod.POST)
 	public ResponseEntity<?> updateRecord(@RequestBody Record record){
+		int result = 0;
 		try{
-			recordManager.updateRecord(record);
+			result = recordManager.updateRecord(record);
+			if(result == 0){
+				return new ResponseEntity<String>("Failed to Update the Record", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 		}catch(RecordManagerException ex){
 			System.out.println("Exception Caught in RecordManager.UpdateRecords"+ex);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

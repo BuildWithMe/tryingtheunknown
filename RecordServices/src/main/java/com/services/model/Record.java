@@ -5,9 +5,6 @@ import java.util.Calendar;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.services.common.PaymentMode;
-import com.services.common.PaymentStatus;
-
 /**
  * This is a domain object for a single record in the database
  * 
@@ -15,6 +12,8 @@ import com.services.common.PaymentStatus;
  */
 @XmlRootElement
 public class Record {
+	
+	private BigDecimal recordId;
 	
 	private Calendar date;
 	
@@ -40,37 +39,45 @@ public class Record {
 	
 	private BigDecimal totalTax;
 	
-	private Calendar paidDate;
+	private Calendar paymentDate;
 	
-	private PaymentMode pymtMd;
+	private Integer paymentMode;
 	
-	private PaymentStatus pymtStatus;
+	private String paymentStatus;
 	
 	private String checqueNbr;	
-
 	
-	public Calendar getPaidDate() {
-		return paidDate;
+
+	public BigDecimal getRecordId() {
+		return recordId;
 	}
 
-	public void setPaidDate(Calendar paidDate) {
-		this.paidDate = paidDate;
+	public void setRecordId(BigDecimal recordId) {
+		this.recordId = recordId;
 	}
 
-	public PaymentMode getPymtMd() {
-		return pymtMd;
+	public Calendar getPaymentDate() {
+		return paymentDate;
 	}
 
-	public void setPymtMd(PaymentMode pymtMd) {
-		this.pymtMd = pymtMd;
+	public void setPaymentDate(Calendar paymentDate) {
+		this.paymentDate = paymentDate;
 	}
 
-	public PaymentStatus getPymtStatus() {
-		return pymtStatus;
+	public Integer getPaymentMode() {
+		return paymentMode;
 	}
 
-	public void setPymtStatus(PaymentStatus pymtStatus) {
-		this.pymtStatus = pymtStatus;
+	public void setPaymentMode(Integer paymentMode) {
+		this.paymentMode = paymentMode;
+	}
+
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
 	}
 
 	public String getChecqueNbr() {

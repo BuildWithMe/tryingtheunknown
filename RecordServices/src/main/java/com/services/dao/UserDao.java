@@ -13,7 +13,7 @@ import com.services.exception.DaoException;
 import com.services.model.User;
 
 
-/*
+/**
  * This is the Dao Layer for all User related Database interactions
  * 
  * @author Shahbaz.Alam
@@ -22,7 +22,7 @@ public class UserDao {
 	
 	private DataSource datasource;
 	
-	/*
+	/**
 	 * The method gets the User details from the User table based on the UserName and Password
 	 * It returns NUll if no such user is found
 	 * 
@@ -42,14 +42,15 @@ public class UserDao {
 		}catch(Exception ex){
 			throw new DaoException("Exception in UserDao.getUser", ex);
 		}
-		if(resultList != null){
-			listUser = getUserObject(resultList);
+		if(resultList == null){
+			return null;
 		}
+		listUser = getUserObject(resultList);
 		return listUser.get(0);
 	}
 	
 
-	/*
+	/**
 	 * This method adds the User details in the User Table
 	 * 
 	 * @return The number of rows updated
@@ -71,7 +72,7 @@ public class UserDao {
 	}
 	
 	
-	/*
+	/**
 	 * This method deletes one User detail from the User Table based on its user_Id
 	 */
 	public void removeUser(User user) throws DaoException{
@@ -88,7 +89,7 @@ public class UserDao {
 	}
 	
 	
-	/*
+	/**
 	 * This method retrieves all the Users from the User Table
 	 * 
 	 * @returns List<User>
@@ -110,7 +111,7 @@ public class UserDao {
 	}
 	
 	
-	/*
+	/**
 	 * This method is used to populate the User Object from the ResultList
 	 * 
 	 * @return List<User>

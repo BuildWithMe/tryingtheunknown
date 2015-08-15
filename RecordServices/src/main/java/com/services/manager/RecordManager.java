@@ -31,9 +31,12 @@ public class RecordManager {
 		List<Record> listRecords = null;
 		calculateOtherFieldsOfRecord(record);
 		try{
-			recordDao.saveRecord(record);
-			
-			listRecords = recordDao.getAllRecordForCurrentDate();
+			int result = recordDao.saveRecord(record);
+			if(result == 1){
+				listRecords = recordDao.getAllRecordForCurrentDate(record.getDate());
+			}else{
+				throw new RecordManagerException("Failed to Save the Record");
+			}
 		}catch(DaoException ex){
 			throw new RecordManagerException("DaoException Caught in saveAndReturnRecords", ex);
 		}		
@@ -61,13 +64,14 @@ public class RecordManager {
 	 * 
 	 * @param record
 	 */
-	public void updateRecord(Record record) throws RecordManagerException{
+	public int updateRecord(Record record) throws RecordManagerException{
+		int result = 0;
 		try{
-			recordDao.updateRecord(record);
+			result = recordDao.updateRecord(record);
 		}catch(DaoException ex){
 			throw new RecordManagerException("DaoException Caught in Updating Record", ex);
 		}
-		
+		return result;
 	}
 	
 	

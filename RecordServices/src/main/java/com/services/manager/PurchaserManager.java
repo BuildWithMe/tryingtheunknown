@@ -3,6 +3,7 @@ package com.services.manager;
 import java.util.List;
 
 import com.services.dao.PurchaserDao;
+import com.services.exception.DaoException;
 import com.services.exception.PurchaserManagerException;
 
 
@@ -19,9 +20,14 @@ public class PurchaserManager {
 	 *The method will be used for adding the Purchaser. It will pass
 	 *the purchaser name to the dao layer to update the Purchaser Table  
 	 */	
-	public void addPurchaser(String name) throws PurchaserManagerException{
-		purchaserDao.addPurchaser(name);
-		
+	public int addPurchaser(String name) throws PurchaserManagerException{
+		int result = 0;
+		try{
+			result = purchaserDao.addPurchaser(name);
+		}catch(DaoException ex){
+			throw new PurchaserManagerException("DaoException caught in AddPurchaser", ex);
+		}
+		return result;		
 	}
 	
 	/**
@@ -29,14 +35,23 @@ public class PurchaserManager {
 	 * the purchaser name to the dao layer to delete it from the Purchaser Table
 	 */
 	public void removePurchaser(String name) throws PurchaserManagerException{
-		purchaserDao.removePurchaser(name);
+		try{
+			purchaserDao.removePurchaser(name);
+		}catch(DaoException ex){
+			throw new PurchaserManagerException("DaoException caught in RemovePurchaser", ex);
+		}		
 	}
 	
 	/**
 	 * The method will be used for fetching all the purchasers
 	 */
 	public List<String> getAllPurchaser() throws PurchaserManagerException{
-		List<String> listPurchaser = purchaserDao.getAllPurchaser();
+		List<String> listPurchaser = null;
+		try{
+			listPurchaser = purchaserDao.getAllPurchaser();
+		}catch(DaoException ex){
+			throw new PurchaserManagerException("DaoException caught in GetAllPurchaser", ex);
+		}
 		return listPurchaser;
 	}
 
