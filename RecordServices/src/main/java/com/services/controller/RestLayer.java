@@ -189,7 +189,7 @@ public class RestLayer {
 	 * This is a Delete Service to delete a record. It takes the RecordId from the
 	 * URL. It returns a success status on successful deletion
 	 */
-	@RequestMapping(value="/deleteRecord/recordId/{recordId}", method = RequestMethod.DELETE)
+	@RequestMapping(value="/deleteRecord/recordId/{recordId}", method = RequestMethod.POST)
 	public ResponseEntity<?> deleteRecord(@PathVariable BigDecimal recordId){
 		try{
 			recordManager.deleteRecord(recordId);
