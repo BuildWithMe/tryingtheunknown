@@ -6,7 +6,11 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.services.common.JdbcQueryConstant;
 import com.services.exception.DaoException;
@@ -18,8 +22,11 @@ import com.services.model.User;
  * 
  * @author Shahbaz.Alam
  */
+@Component
+@Repository
 public class UserDao {
-	
+	@Autowired
+	@Qualifier("primaryDs")
 	private DataSource datasource;
 	
 	/**
@@ -121,7 +128,7 @@ public class UserDao {
 		List<User> listUser = new ArrayList<User>();
 		for(Map<String, Object> result : resultList){
 			user  = new User();
-			user.setAdmin(result.get("IsAdmin").equals("Y") ? true : false);
+			user.setAdmin(result.get("Is_Admin").equals("Y") ? true : false);
 			user.setFullName((String) result.get("Full_Name"));
 			user.setPassword((String) result.get("Password"));
 			user.setUserId((String) result.get("User_Id"));

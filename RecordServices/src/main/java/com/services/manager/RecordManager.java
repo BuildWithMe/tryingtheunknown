@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.services.dao.RecordDao;
 import com.services.exception.DaoException;
@@ -15,6 +16,7 @@ import com.services.model.Record;
  * 
  * @author Shahbaz.Alam
  */
+@Component
 public class RecordManager {
 	
 	@Autowired

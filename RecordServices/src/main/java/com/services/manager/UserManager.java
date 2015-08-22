@@ -3,6 +3,7 @@ package com.services.manager;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.services.dao.UserDao;
 import com.services.exception.DaoException;
@@ -14,6 +15,7 @@ import com.services.model.User;
  * 
  * @author Shahbaz.Alam
  */
+@Component
 public class UserManager {
 	
 	@Autowired

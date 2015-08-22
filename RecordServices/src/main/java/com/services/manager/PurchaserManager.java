@@ -2,6 +2,8 @@ package com.services.manager;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.services.dao.PurchaserDao;
 import com.services.exception.DaoException;
 import com.services.exception.PurchaserManagerException;
@@ -12,6 +14,7 @@ import com.services.exception.PurchaserManagerException;
  * 
  * @author Shahbaz.Alam
  */
+@Component
 public class PurchaserManager {
 	
 	private PurchaserDao purchaserDao;

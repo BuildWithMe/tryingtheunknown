@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import com.services.common.JdbcQueryConstant;
 import com.services.exception.DaoException;
@@ -16,6 +17,7 @@ import com.services.exception.DaoException;
  * 
  * @author Shahbaz.Alam
  */
+@Component
 public class PurchaserDao {
 	
 	private DataSource datasource;
