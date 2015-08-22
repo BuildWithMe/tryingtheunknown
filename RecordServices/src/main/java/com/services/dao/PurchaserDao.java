@@ -6,20 +6,23 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.services.common.JdbcQueryConstant;
 import com.services.exception.DaoException;
 
-/*
+/**
  * This is the Dao layer for all the Purchaser related Database Interactions
  * 
  * @author Shahbaz.Alam
  */
 @Component
 public class PurchaserDao {
-	
+	@Autowired
+	@Qualifier("primaryDs")
 	private DataSource datasource;
 	
 	/**
