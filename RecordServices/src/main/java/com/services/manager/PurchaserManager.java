@@ -2,6 +2,7 @@ package com.services.manager;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.services.dao.PurchaserDao;
@@ -16,7 +17,7 @@ import com.services.exception.PurchaserManagerException;
  */
 @Component
 public class PurchaserManager {
-	
+	@Autowired
 	private PurchaserDao purchaserDao;
 	
 	/**

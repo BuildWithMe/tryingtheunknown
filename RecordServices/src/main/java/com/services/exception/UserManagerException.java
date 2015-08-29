@@ -15,6 +15,10 @@ public class UserManagerException extends Exception {
 		super(message, cause);
 	}
 	
+	public UserManagerException(Throwable cause){
+		super(cause);
+	}
+	
 	
 	
 

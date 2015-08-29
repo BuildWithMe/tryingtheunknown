@@ -81,6 +81,21 @@ public class UserManager {
 		}		
 		return listUsers;
 	}
+
+
+	/**
+	 * Checks whether the given user id is already present or not
+	 * @param userid
+	 * @return
+	 * @throws UserManagerException 
+	 */
+	public boolean checkUser(String userid) throws UserManagerException {
+		try{
+			return userDao.checkUser(userid);
+		}catch(DaoException ex){
+			throw new UserManagerException(ex);
+		}
+	}
 	
 
 }

@@ -17,6 +17,8 @@ public class JdbcQueryConstant {
 	public static final String Remove_User = "delete from USER where User_Id = ?";
 	
 	public static final String Get_All_User = "select * from USER";
+	
+	public static final String Check_User = "select * from USER where User_Id = ?";
 
 	//Purchaser Sqls
 	
@@ -28,7 +30,7 @@ public class JdbcQueryConstant {
 	
 	//Record Sqls
 	
-	public static final String Save_Record = "Insert into RECORD (DATE, PURCHASER_NAME, VEHICLE_NBR, CROP_NAME, BAQ_QTY, NET_WEIGHT, ACTUAL_WEIGHT, "
+	public static final String Save_Record = "Insert into RECORD (DATE, PURCHASER_NAME, VEHICLE_NBR, CROP_NAME, BAG_QTY, NET_WEIGHT, ACTUAL_WEIGHT, "
 			+ "CROP_RATE, TOTAL_COST, MARKET_FEE, SUPERVISION_FEE, TOTAL_TAX, PAYMENT_DATE, PAYMENT_MODE, PAYMENT_STATUS, CHECQUE_NBR) "
 			+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	

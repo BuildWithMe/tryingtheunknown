@@ -1,6 +1,9 @@
 package com.services.manager;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,30 +79,56 @@ public class RecordManager {
 		return result;
 	}
 	
+	/**
+	 * This method returns the list of records for the current date.
+	 * It takes the current system date and passes to the dao layer 
+	 * for retrieval
+	 * @throws RecordManagerException 
+	 * 
+	 */
+	public List<Record> getAllRecordsForCurrentDate() throws RecordManagerException {
+		List<Record> listRecord = null;
+		DateFormat dateFormat = new SimpleDateFormat("DD/MM/YYYY");
+		Date date = new Date();
+		String currentDate = dateFormat.format(date);
+		try{
+			listRecord = recordDao.getAllRecordForCurrentDate(currentDate);
+		}catch(DaoException ex){
+			throw new RecordManagerException("DaoException Caught in Updating Record", ex);
+		}
+		return listRecord;
+	}
+	
 	
 	
 
 	private void calculateOtherFieldsOfRecord(Record record) {
-		if(record.getNetWeight() != null 
-				&& record.getBagQty() != null){
-			record.setActualWeight(record.getNetWeight().subtract(record.getBagQty()));
-		}
-		if(record.getActualWeight() != null 
-				&& record.getCropRate() != null){
-			record.setTotalCost(record.getActualWeight().multiply(record.getCropRate()));
-		}
-		if(record.getTotalCost() != null){
-			record.setMarketFee(record.getTotalCost().divide(new BigDecimal(100)));
-		}
-		if(record.getMarketFee() != null){
-			BigDecimal val = record.getMarketFee().multiply(new BigDecimal(0.05));
-			record.setSupervisionFee(val.divide(new BigDecimal(100)));
-		}
-		if(record.getMarketFee() != null 
-				&& record.getSupervisionFee() != null){
-			record.setTotalTax(record.getMarketFee().add(record.getSupervisionFee()));
-		}
+		BigDecimal netWt = record.getNetWeight();
+		BigDecimal bagQty = record.getBagQty();
+		BigDecimal cropRate = record.getCropRate();
 		
+		//calculation starts
+		BigDecimal actualWt = netWt.subtract(bagQty);
+		
+		BigDecimal totalCost = actualWt.multiply(cropRate);
+		totalCost = totalCost.setScale(2, BigDecimal.ROUND_HALF_UP);
+		
+		BigDecimal marketFee = totalCost.divide(new BigDecimal("100"));
+		
+		BigDecimal supervisionFee = marketFee.multiply(new BigDecimal("0.05"));
+		supervisionFee = supervisionFee.setScale(2, BigDecimal.ROUND_HALF_UP);
+		
+		BigDecimal totalTax = marketFee.add(supervisionFee);
+		totalTax = totalTax.setScale(2, BigDecimal.ROUND_HALF_UP);
+		//calculation ends
+		
+		record.setActualWeight(actualWt);
+		record.setTotalCost(totalCost);
+		record.setMarketFee(marketFee);
+		record.setSupervisionFee(supervisionFee);
+		record.setTotalTax(totalTax);
+				
 	}
+
 
 }

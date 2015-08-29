@@ -3,6 +3,8 @@ package com.services.controller;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,7 @@ import com.services.model.User;
  */
 @RestController
 public class RestLayer {
+	private static final Logger logger = LoggerFactory.getLogger(RestLayer.class);
 	
 	@Autowired
 	private UserManager userManager;
@@ -54,11 +57,12 @@ public class RestLayer {
 		try{
 			user = userManager.validateUser(userid, password);
 		}catch(UserManagerException ex){
-			System.out.println("Exception Caught in UserManager.ValidateUser" +ex);
-			return new ResponseEntity<Object>("Exception Caught in Validating User", HttpStatus.INTERNAL_SERVER_ERROR);
+			logger.error("Exception caught in validate user>>>>>"+ex.getMessage());
+			return new ResponseEntity<Object>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}	
 		if(user == null){
-			return new ResponseEntity<Object>("Invalid User", HttpStatus.BAD_REQUEST);
+			logger.error("Invalid authentication>>>>>");
+			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<Object>(user, HttpStatus.OK);
 	}
@@ -69,18 +73,19 @@ public class RestLayer {
 	 * the User Table
 	 */
 	@RequestMapping(value="/addUser", method = RequestMethod.POST)
-	public ResponseEntity<String> addUser(@RequestBody User user){
+	public ResponseEntity<?> addUser(@RequestBody User user){
 		int result = 0;
 		try{
 			result = userManager.addUser(user);
 			if(result == 0){
-				return new ResponseEntity<String>("Failed to Add the User", HttpStatus.INTERNAL_SERVER_ERROR);
+				logger.error("Failed to add the user>>>>>"+user.getFullName());
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}catch(UserManagerException ex){
-			System.out.println("Exception Caught in UserManager.AddUser"+ex);
-			return new ResponseEntity<String>("Exception caught in Adding the User", HttpStatus.INTERNAL_SERVER_ERROR);
+			logger.error("Exception caught in add User>>>>>"+ex.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}	
-		return new ResponseEntity<String>("Successfully Added", HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	/**
@@ -93,7 +98,7 @@ public class RestLayer {
 		try{
 			userManager.removeUser(user);
 		}catch(UserManagerException ex){
-			System.out.println("Exception Caught in UserManager.RemoveUser"+ex);
+			logger.error("Exception caught in remove user>>>"+ex.getMessage());
 			return new ResponseEntity<String>("Exception caught in Removing the User", HttpStatus.INTERNAL_SERVER_ERROR);
 		}	
 		
@@ -111,7 +116,7 @@ public class RestLayer {
 		try{
 			listUsers = userManager.getAllUser();
 		}catch(UserManagerException ex){
-			System.out.println("Exception Caught in UserManager.GetAllUser"+ex);
+			logger.error("Exception caught in get all user>>>>"+ex.getMessage());
 			return new ResponseEntity<List<User>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<List<User>>(listUsers,HttpStatus.OK);
@@ -126,7 +131,7 @@ public class RestLayer {
 		try{
 			listPurchasers = purchaserManager.getAllPurchaser();
 		}catch(PurchaserManagerException ex){
-			System.out.println("Exception Caught in PurchaserManager.GetAllPurchaser"+ex);
+			logger.error("Exception caught in get all purchaser>>>"+ex.getMessage());
 			return new ResponseEntity<List<String>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<List<String>>(listPurchasers,HttpStatus.OK);		
@@ -142,7 +147,7 @@ public class RestLayer {
 		try{
 			purchaserManager.removePurchaser(purchaserName);
 		}catch(PurchaserManagerException ex){
-			System.out.println("Exception Caught in PurchaserManager.RemovePurchaser"+ex);
+			logger.error("Exception caught in removePurchaser>>>"+ex.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}	
 		
@@ -159,7 +164,7 @@ public class RestLayer {
 		try{
 			purchaserManager.addPurchaser(purchaserName);
 		}catch(PurchaserManagerException ex){
-			System.out.println("Exception Caught in PurchaserManager.AddPurchaser"+ex);
+			logger.error("Exception caught in addPurchaser>>>"+ex.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}		
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -179,7 +184,7 @@ public class RestLayer {
 		try{
 			listRecord = recordManager.saveAndReturnRecords(record);
 		}catch(RecordManagerException ex){
-			System.out.println("Exception Caught in RecordManager.SaveAndReturnRecords"+ex);
+			logger.error("Exception caught in saveRecord>>>"+ex.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(listRecord,HttpStatus.OK);
@@ -194,7 +199,7 @@ public class RestLayer {
 		try{
 			recordManager.deleteRecord(recordId);
 		}catch(RecordManagerException ex){
-			System.out.println("Exception Caught in RecordManager.DeleteRecords"+ex);
+			logger.error("Exception caught in deleteRecord>>>"+ex.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -213,12 +218,45 @@ public class RestLayer {
 				return new ResponseEntity<String>("Failed to Update the Record", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}catch(RecordManagerException ex){
-			System.out.println("Exception Caught in RecordManager.UpdateRecords"+ex);
+			logger.error("Exception caught in updateRecord>>>"+ex.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
+	/**
+	 * This is a get service for returning list of records for the current date
+	 */
+	@RequestMapping(value = "/getAllRecords", method = RequestMethod.GET)
+	public ResponseEntity<List<Record>> getAllRecordsForCurrentDate(){
+		List<Record> listRecords = null;
+		try{
+			listRecords = recordManager.getAllRecordsForCurrentDate();
+		}catch(RecordManagerException ex){
+			logger.error("Exception caught in getAllRecordsForCurrentDate>>>"+ex.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(listRecords,HttpStatus.OK);
+		
+	}
+	
+	/**
+	 * This is a get service to check whether a userid is already present 
+	 */
+	@RequestMapping(value = "/checkUser/{userid}", method = RequestMethod.GET)
+	public ResponseEntity<?> checkUserId(@PathVariable String userid){
+		boolean value = false;
+		try{
+			value = userManager.checkUser(userid);
+		}catch(UserManagerException ex){
+			logger.error("Exception caught in checkUserId>>>"+ex.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		if(value){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);		
+	}
 	
 	
 	

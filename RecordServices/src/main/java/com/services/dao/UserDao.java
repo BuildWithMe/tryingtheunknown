@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -49,7 +51,7 @@ public class UserDao {
 		}catch(Exception ex){
 			throw new DaoException("Exception in UserDao.getUser", ex);
 		}
-		if(resultList == null){
+		if(CollectionUtils.isEmpty(resultList) || MapUtils.isEmpty(resultList.get(0))){
 			return null;
 		}
 		listUser = getUserObject(resultList);
@@ -115,6 +117,29 @@ public class UserDao {
 		}
 		
 		return listUsers;
+	}
+	
+	/**
+	 * It checks whether the user id is present in the db or not
+	 * @param userid
+	 * @return
+	 * @throws DaoException 
+	 */
+	public boolean checkUser(String userid) throws DaoException {
+		boolean value = true;
+		JdbcTemplate template = new JdbcTemplate(datasource);
+		List<Map<String, Object>> resultList = null;
+		List<Object> paramObjs = new ArrayList<>();
+		paramObjs.add(userid);
+		try{
+			resultList = template.queryForList(JdbcQueryConstant.Check_User, paramObjs.toArray());
+		}catch(Exception ex){
+			throw new DaoException("Exception in UserDao.CheckUser",ex);
+		}
+		if(CollectionUtils.isEmpty(resultList) || MapUtils.isEmpty(resultList.get(0))){
+			value = false;
+		}		
+		return value;
 	}
 	
 	

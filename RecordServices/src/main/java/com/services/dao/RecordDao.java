@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +36,7 @@ public class RecordDao {
 	public int saveRecord(Record record) throws DaoException{
 		JdbcTemplate template = new JdbcTemplate(datasource);
 		List<Object> paramObjs = new ArrayList<Object>();
-		paramObjs.add(formatCalendarToString(record.getDate()));
+		paramObjs.add(record.getDate());
 		paramObjs.add(record.getPurchaserName());
 		paramObjs.add(record.getVehicleNbr());
 		paramObjs.add(record.getCropName());
@@ -49,7 +48,7 @@ public class RecordDao {
 		paramObjs.add(record.getMarketFee());
 		paramObjs.add(record.getSupervisionFee());
 		paramObjs.add(record.getTotalTax());
-		paramObjs.add(formatCalendarToString(record.getPaymentDate()));
+		paramObjs.add(record.getPaymentDate());
 		paramObjs.add(record.getPaymentMode());
 		paramObjs.add(record.getPaymentStatus());
 		paramObjs.add(record.getChecqueNbr());
@@ -70,12 +69,12 @@ public class RecordDao {
 	 * @return List<Record>
 	 * @throws DaoException
 	 */
-	public List<Record> getAllRecordForCurrentDate(Calendar currentDate) throws DaoException{
+	public List<Record> getAllRecordForCurrentDate(String currentDate) throws DaoException{
 		JdbcTemplate template = new JdbcTemplate(datasource);
 		List<Record> listRecords = null;
 		List<Map<String, Object>> queryResult = null;
 		List<Object> paramObjs = new ArrayList<Object>();		
-		paramObjs.add(formatCalendarToString(currentDate));
+		paramObjs.add(currentDate);
 		
 		try{
 			queryResult = template.queryForList(JdbcQueryConstant.Get_All_Record_For_Current_Date, paramObjs.toArray());
@@ -120,7 +119,7 @@ public class RecordDao {
 	public int updateRecord(Record record) throws DaoException{
 		JdbcTemplate template = new JdbcTemplate(datasource);
 		List<Object> paramObjs = new ArrayList<Object>();
-		paramObjs.add(formatCalendarToString(record.getPaymentDate()));
+		paramObjs.add(record.getPaymentDate());
 		paramObjs.add(record.getPaymentMode());
 		paramObjs.add(record.getPaymentStatus());
 		
@@ -146,7 +145,7 @@ public class RecordDao {
 		for(Map<String, Object> map : queryResult){
 			record = new Record();
 			record.setRecordId((BigDecimal) map.get("RECORD_ID"));
-			record.setDate(getCalendar((Date) map.get("DATE")));
+			record.setDate(getDateAsString((Date) map.get("DATE")));
 			record.setPurchaserName((String) map.get("PURCHASER_NAME"));
 			record.setVehicleNbr((String) map.get("VEHICLE_NBR"));
 			record.setCropName((String) map.get("CROP_NAME"));
@@ -158,7 +157,7 @@ public class RecordDao {
 			record.setMarketFee((BigDecimal) map.get("MARKET_FEE"));
 			record.setSupervisionFee((BigDecimal) map.get("SUPERVISION_FEE"));
 			record.setTotalTax((BigDecimal) map.get("TOTAL_TAX"));
-			record.setPaymentDate(getCalendar((Date) map.get("PAYMENT_DATE")));
+			record.setPaymentDate(getDateAsString((Date) map.get("PAYMENT_DATE")));
 			record.setPaymentMode((Integer) map.get("PAYMENT_MODE"));
 			record.setPaymentStatus((String) map.get("PAYMENT_STATUS"));
 			record.setChecqueNbr((String) map.get("CHECQUE_NBR"));
@@ -167,18 +166,9 @@ public class RecordDao {
 		return listRecord;
 	}
 	
-	private String formatCalendarToString(Calendar cal){
-		if(cal == null){
-			return null;
-		}
+	private String getDateAsString(Date date){
 		SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY");
-		return sdf.format(cal.getTime());
-	}
-	
-	private Calendar getCalendar(Date date){
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		return cal;
+		return sdf.format(date);
 	}
 
 }

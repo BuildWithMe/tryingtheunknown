@@ -1,7 +1,6 @@
 package com.services.model;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -15,7 +14,7 @@ public class Record {
 	
 	private BigDecimal recordId;
 	
-	private Calendar date;
+	private String date;
 	
 	private String purchaserName;
 	
@@ -39,7 +38,7 @@ public class Record {
 	
 	private BigDecimal totalTax;
 	
-	private Calendar paymentDate;
+	private String paymentDate;
 	
 	private Integer paymentMode;
 	
@@ -56,11 +55,11 @@ public class Record {
 		this.recordId = recordId;
 	}
 
-	public Calendar getPaymentDate() {
+	public String getPaymentDate() {
 		return paymentDate;
 	}
 
-	public void setPaymentDate(Calendar paymentDate) {
+	public void setPaymentDate(String paymentDate) {
 		this.paymentDate = paymentDate;
 	}
 
@@ -88,11 +87,11 @@ public class Record {
 		this.checqueNbr = checqueNbr;
 	}
 
-	public Calendar getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Calendar date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
