@@ -22,6 +22,7 @@ import com.services.manager.PurchaserManager;
 import com.services.manager.RecordManager;
 import com.services.manager.UserManager;
 import com.services.model.Record;
+import com.services.model.SearchPredicate;
 import com.services.model.User;
 
 /**
@@ -258,8 +259,22 @@ public class RestLayer {
 		return new ResponseEntity<>(HttpStatus.OK);		
 	}
 	
-	
-	
-		
+	/**
+	 * This is a post service to search records
+	 */
+	@RequestMapping(value = "/search", method = RequestMethod.POST)
+	public ResponseEntity<List<Record>> search(@RequestBody SearchPredicate searchPredicate){
+		List<Record> listRecord = null;
+		try{
+			listRecord = recordManager.searchRecords(searchPredicate);
+		}catch(RecordManagerException ex){
+			logger.error("Exception caught in searchRecords>>>"+ex.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		if(listRecord == null){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(listRecord,HttpStatus.OK);
+	}		
 
 }

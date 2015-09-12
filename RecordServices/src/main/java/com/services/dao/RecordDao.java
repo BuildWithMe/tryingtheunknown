@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
@@ -19,6 +20,7 @@ import com.services.common.JdbcQueryConstant;
 import com.services.common.PaymentMode;
 import com.services.exception.DaoException;
 import com.services.model.Record;
+import com.services.model.SearchPredicate;
 
 @Component
 public class RecordDao {
@@ -137,6 +139,42 @@ public class RecordDao {
 			throw new DaoException("Exception caught in RecordDao.UpdateRecord", ex);
 		}
 		return result;		
+	}
+	
+	/**
+	 * The method builds the search query to fetch the records
+	 * The sql is  built dynamically based on the input
+	 * 
+	 * @param SearchPredicate
+	 * @return List<Record>
+	 */
+	public List<Record> searchRecords(SearchPredicate predicate)  throws DaoException{
+		JdbcTemplate template = new JdbcTemplate(datasource);
+		List<Record> listRecords = null;
+		List<Map<String, Object>> queryResult = null;
+		StringBuilder sql = new StringBuilder();
+		sql.append("select * from Record where Date");
+		if(predicate.getEndDate() != null){
+			sql.append(" between '"+predicate.getStartDate()+"' and '"+predicate.getEndDate()+"'");
+		}else{
+			sql.append(" = '"+predicate.getStartDate()+"'");
+		}
+		if(predicate.getCropName() != null){
+			sql.append(" and crop_name = '"+predicate.getCropName()+"'");
+		}
+		if(predicate.getPurchaserName() != null){
+			sql.append(" and purchaser_name = '"+predicate.getPurchaserName()+"'");
+		}
+		
+		try{
+			queryResult = template.queryForList(sql.toString());
+		}catch(DataAccessException ex){
+			throw new DaoException("Exception caught in RecordDao.searchRecords", ex);
+		}
+		if(CollectionUtils.isNotEmpty(queryResult)){
+			listRecords = getAllRecords(queryResult);
+		}		
+		return listRecords;
 	}
 	
 	private List<Record> getAllRecords(List<Map<String, Object>> queryResult) {

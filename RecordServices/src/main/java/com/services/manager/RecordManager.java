@@ -13,6 +13,7 @@ import com.services.dao.RecordDao;
 import com.services.exception.DaoException;
 import com.services.exception.RecordManagerException;
 import com.services.model.Record;
+import com.services.model.SearchPredicate;
 
 /**
  * This is a central point for all Record related operations
@@ -99,6 +100,27 @@ public class RecordManager {
 		return listRecord;
 	}
 	
+	/**
+	 * The method is used to search a list of records based on the given
+	 * search criteria. Search can be made on the basis of;
+	 * a given date,
+	 * between two given dates,
+	 * dates with crop name
+	 * dates with purchaser name
+	 * dates with crop name and purchaser name
+	 * 
+	 * @param searchPredicate
+	 * @return
+	 * @throws RecordManagerException
+	 */
+	public List<Record> searchRecords(SearchPredicate searchPredicate) throws RecordManagerException {
+		try{
+			return recordDao.searchRecords(searchPredicate);
+		}catch(DaoException ex){
+			throw new RecordManagerException("DaoException Caught in searchRecords", ex);
+		}
+	}
+	
 	
 	
 
@@ -129,6 +151,5 @@ public class RecordManager {
 		record.setTotalTax(totalTax);
 				
 	}
-
 
 }
