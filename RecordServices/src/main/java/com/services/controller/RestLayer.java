@@ -21,6 +21,7 @@ import com.services.exception.UserManagerException;
 import com.services.manager.PurchaserManager;
 import com.services.manager.RecordManager;
 import com.services.manager.UserManager;
+import com.services.model.GraphResponse;
 import com.services.model.Record;
 import com.services.model.SearchPredicate;
 import com.services.model.User;
@@ -280,6 +281,7 @@ public class RestLayer {
 	/**
 	 * This service is for change password of a user
 	 */
+	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)
 	public ResponseEntity<?> changePassword(@RequestBody User user){
 		try{
 			userManager.changePassword(user);
@@ -288,6 +290,23 @@ public class RestLayer {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	/**
+	 * This service returns the tax details 
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/getGraphDetails", method = RequestMethod.GET)
+	public ResponseEntity<GraphResponse> getGraphDetails(){
+		GraphResponse response = null;
+		try{
+			response = recordManager.getGraphDetails();
+		}catch(RecordManagerException ex){
+			logger.error("Exception caught in getGraphDetails>>>"+ex.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 }
