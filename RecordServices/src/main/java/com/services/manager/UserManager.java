@@ -97,5 +97,19 @@ public class UserManager {
 		}
 	}
 	
+	public void changePassword(User user) throws UserManagerException{
+		try{
+			String existingPwd = userDao.getPassword(user.getUserId());
+			if(existingPwd.equalsIgnoreCase(user.getPassword())){
+				userDao.updatePassword(user);
+			}
+			else{
+				throw new UserManagerException("Password details not matching");
+			}
+		}catch(DaoException ex){
+			throw new UserManagerException("DaoException Caught in ChangePassword", ex);
+		}
+	}
+	
 
 }

@@ -18,6 +18,8 @@ public class User {
 	private String password;
 	
 	private boolean isAdmin;
+	
+	private String newPassword;
 
 	
 	
@@ -51,6 +53,14 @@ public class User {
 
 	public void setAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
+	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
 	}
 	
 

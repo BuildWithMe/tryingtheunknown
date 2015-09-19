@@ -3,15 +3,21 @@ package com.services.manager;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.services.dao.RecordDao;
 import com.services.exception.DaoException;
 import com.services.exception.RecordManagerException;
+import com.services.model.GraphResponse;
 import com.services.model.Record;
 import com.services.model.SearchPredicate;
 
@@ -121,8 +127,70 @@ public class RecordManager {
 		}
 	}
 	
+	/**
+	 * The method retrieves the total tax paid and unpaid for a particular
+	 * month
+	 * 
+	 * @return
+	 * @throws RecordManagerException
+	 */
+	public GraphResponse getGraphDetails() throws RecordManagerException{
+		GraphResponse response = null;
+		SearchPredicate predicate = new SearchPredicate();
+		String startFinancialYear = "01/04/"+String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+		predicate.setStartDate(startFinancialYear);
+		predicate.setEndDate(getCurrentDate());
+		
+		List<Record> listRecord = null;
+		try{
+			listRecord = recordDao.searchRecords(predicate);
+		}catch(DaoException ex){
+			throw new RecordManagerException("DaoException Caught in searchRecords", ex);
+		}
+		if(CollectionUtils.isNotEmpty(listRecord)){
+			response = populateGraphDetails(listRecord);
+		}
+		return response;
+	}
 	
-	
+	private GraphResponse populateGraphDetails(List<Record> listRecord) {
+		GraphResponse response = new GraphResponse();
+		Map<String, Object> paidTax = new HashMap<String, Object>();
+		Map<String, Object> unpaidTax = new HashMap<String, Object>();
+		Map<String, List<Record>> recordMap = new HashMap<String, List<Record>>();
+		for(Record record : listRecord){
+			String[] arr = record.getDate().split("/");
+			if(recordMap.containsKey(arr[1])){
+				recordMap.get(arr[1]).add(record);
+			}else{
+				List<Record> recList = new ArrayList<Record>();
+				recList.add(record);
+				recordMap.put(arr[1], recList);
+			}
+		}
+		for(String key : recordMap.keySet()){
+			BigDecimal ptotalTax = new BigDecimal("0");
+			BigDecimal utotalTax = new BigDecimal("0");
+			for(Record record : recordMap.get(key)){
+				if(record.getPaymentStatus().equalsIgnoreCase("P")){
+					ptotalTax = ptotalTax.add(record.getTotalTax());
+				}else{
+					utotalTax = utotalTax.add(record.getTotalTax());
+				}				
+			}
+			paidTax.put(key, ptotalTax);
+			unpaidTax.put(key, utotalTax);
+		}
+		response.setPaidTax(paidTax);
+		response.setUnpaidTax(unpaidTax);		
+		return response;
+	}
+
+	private String getCurrentDate(){
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		return sdf.format(cal.getTime());
+	}	
 
 	private void calculateOtherFieldsOfRecord(Record record) {
 		BigDecimal netWt = record.getNetWeight();

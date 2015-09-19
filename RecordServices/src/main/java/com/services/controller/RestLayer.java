@@ -275,6 +275,19 @@ public class RestLayer {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(listRecord,HttpStatus.OK);
-	}		
+	}
+	
+	/**
+	 * This service is for change password of a user
+	 */
+	public ResponseEntity<?> changePassword(@RequestBody User user){
+		try{
+			userManager.changePassword(user);
+		}catch(UserManagerException ex){
+			logger.error("User Details cannot be validated for user"+user.getUserId()+"Exception"+ex.getMessage());
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
 }

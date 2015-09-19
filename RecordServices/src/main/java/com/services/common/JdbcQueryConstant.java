@@ -19,6 +19,10 @@ public class JdbcQueryConstant {
 	public static final String Get_All_User = "select * from USER";
 	
 	public static final String Check_User = "select * from USER where User_Id = ?";
+	
+	public static final String Get_Password = "select password from user where User_Id = ?";
+	
+	public static final String Update_Password = "Update USER set Password = ? where User_Id = ?";
 
 	//Purchaser Sqls
 	

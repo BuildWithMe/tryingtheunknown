@@ -162,4 +162,46 @@ public class UserDao {
 		return listUser;
 	}
 
+	/**
+	 * The method returns a password for a user id
+	 * @param userId
+	 * @return pwd
+	 * @throws DaoException 
+	 */
+	public String getPassword(String userId) throws DaoException {
+		String pwd = null;
+		JdbcTemplate template = new JdbcTemplate(datasource);
+		List<Map<String, Object>> resultList = null;
+		List<Object> paramObjs = new ArrayList<>();
+		paramObjs.add(userId);
+		
+		try{
+			resultList = template.queryForList(JdbcQueryConstant.Get_Password, paramObjs.toArray());
+		}catch(Exception ex){
+			throw new DaoException("Exception in UserDao.CheckUser",ex);
+		}
+		if(CollectionUtils.isNotEmpty(resultList)){
+			pwd = (String) resultList.get(0).get("Password");
+		}
+		return pwd;		
+	}
+	/**
+	 * The method updates the password for the user
+	 * @param user
+	 * @throws DaoException 
+	 */
+	public void updatePassword(User user) throws DaoException{
+		JdbcTemplate template = new JdbcTemplate(datasource);
+		List<Object> paramObjs = new ArrayList<>();
+		paramObjs.add(user.getNewPassword());
+		paramObjs.add(user.getUserId());
+		
+		try{
+			template.update(JdbcQueryConstant.Update_Password, paramObjs.toArray());
+		}catch(Exception ex){
+			throw new DaoException("Exception in UserDao.CheckUser",ex);
+		}
+		
+	}
+
 }

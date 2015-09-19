@@ -154,16 +154,19 @@ public class RecordDao {
 		List<Map<String, Object>> queryResult = null;
 		StringBuilder sql = new StringBuilder();
 		sql.append("select * from Record where Date");
-		if(predicate.getEndDate() != null){
+		if(predicate.getEndDate() != null && !predicate.getEndDate().isEmpty()){
 			sql.append(" between '"+predicate.getStartDate()+"' and '"+predicate.getEndDate()+"'");
 		}else{
 			sql.append(" = '"+predicate.getStartDate()+"'");
 		}
-		if(predicate.getCropName() != null){
+		if(predicate.getCropName() != null && !predicate.getCropName().isEmpty()){
 			sql.append(" and crop_name = '"+predicate.getCropName()+"'");
 		}
-		if(predicate.getPurchaserName() != null){
+		if(predicate.getPurchaserName() != null && !predicate.getPurchaserName().isEmpty()){
 			sql.append(" and purchaser_name = '"+predicate.getPurchaserName()+"'");
+		}
+		if(predicate.getPaymentStatus() != null && !predicate.getPaymentStatus().isEmpty()){
+			sql.append(" and payment_status = '"+predicate.getPaymentStatus()+"'");
 		}
 		
 		try{
@@ -205,7 +208,7 @@ public class RecordDao {
 	}
 	
 	private String getDateAsString(Date date){
-		SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		return sdf.format(date);
 	}
 
