@@ -308,5 +308,18 @@ public class RestLayer {
 		}
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	/**
+	 * The service is used to clear the memory between a certain date range
+	 */
+	@RequestMapping(value = "/clearMemory/startDate/{startDate}/endDate/{endDate}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> clearMemory(@PathVariable String startDate, @PathVariable String endDate){
+		try{
+			recordManager.clearMemory(startDate,endDate);
+		}catch(RecordManagerException ex){
+			logger.error("Exception caught in clearMemory>>>"+ex.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
 }

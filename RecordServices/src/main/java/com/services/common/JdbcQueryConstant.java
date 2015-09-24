@@ -48,4 +48,6 @@ public class JdbcQueryConstant {
 	
 	public static final String WHERE_RECORD_ID = "WHERE RECORD_ID = ?";
 	
+	public static final String Clear_Memory = "Delete from RECORD where DATE between ? and ?";
+	
 }

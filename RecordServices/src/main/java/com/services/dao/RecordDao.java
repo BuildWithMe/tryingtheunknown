@@ -179,6 +179,25 @@ public class RecordDao {
 		}		
 		return listRecords;
 	}
+	/**
+	 * The method deletes all the records between the specified range
+	 * @param startDate
+	 * @param endDate
+	 * @throws DaoException 
+	 */
+	public void clearMemory(String startDate, String endDate) throws DaoException {
+		JdbcTemplate template = new JdbcTemplate(datasource);
+		List<Object> paramObjs = new ArrayList<Object>();		
+		paramObjs.add(startDate);
+		paramObjs.add(endDate);
+		
+		try{
+			template.update(JdbcQueryConstant.Clear_Memory, paramObjs.toArray());
+		}catch(DataAccessException ex){
+			throw new DaoException("Exception caught in RecordDao.DeleteRecord", ex);
+		}
+		
+	}
 	
 	private List<Record> getAllRecords(List<Map<String, Object>> queryResult) {
 		List<Record> listRecord = new ArrayList<Record>();

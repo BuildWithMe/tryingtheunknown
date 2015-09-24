@@ -95,7 +95,7 @@ public class RecordManager {
 	 */
 	public List<Record> getAllRecordsForCurrentDate() throws RecordManagerException {
 		List<Record> listRecord = null;
-		DateFormat dateFormat = new SimpleDateFormat("DD/MM/YYYY");
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = new Date();
 		String currentDate = dateFormat.format(date);
 		try{
@@ -137,9 +137,18 @@ public class RecordManager {
 	public GraphResponse getGraphDetails() throws RecordManagerException{
 		GraphResponse response = null;
 		SearchPredicate predicate = new SearchPredicate();
-		String startFinancialYear = "01/04/"+String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
-		predicate.setStartDate(startFinancialYear);
-		predicate.setEndDate(getCurrentDate());
+		StringBuilder startFinancialYear = new StringBuilder("01/04/");
+		String currentDate = getCurrentDate();
+		String[] arr = currentDate.split("/");
+		Integer currentMonth = Integer.valueOf(arr[1]);
+		if(currentMonth < 4){
+			Integer year = Calendar.getInstance().get(Calendar.YEAR) - 1;
+			startFinancialYear.append(year);
+		}else{
+			startFinancialYear.append(Calendar.getInstance().get(Calendar.YEAR));
+		}
+		predicate.setStartDate(startFinancialYear.toString());
+		predicate.setEndDate(currentDate);
 		
 		List<Record> listRecord = null;
 		try{
@@ -151,6 +160,22 @@ public class RecordManager {
 			response = populateGraphDetails(listRecord);
 		}
 		return response;
+	}
+	
+	/**
+	 * The method clears the db details of all the records between the 
+	 * start date and end date
+	 * @param startDate
+	 * @param endDate
+	 * @throws RecordManagerException
+	 */
+	public void clearMemory(String startDate, String endDate) throws RecordManagerException{
+		try{
+			recordDao.clearMemory(startDate, endDate);
+		}catch(DaoException ex){
+			throw new RecordManagerException("DaoException Caught in clearMemory", ex);
+		}
+		
 	}
 	
 	private GraphResponse populateGraphDetails(List<Record> listRecord) {
@@ -188,7 +213,7 @@ public class RecordManager {
 
 	private String getCurrentDate(){
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		return sdf.format(cal.getTime());
 	}	
 
