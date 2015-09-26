@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.services.exception.CropManagerException;
 import com.services.exception.PurchaserManagerException;
 import com.services.exception.RecordManagerException;
 import com.services.exception.ServiceException;
 import com.services.exception.UserManagerException;
+import com.services.manager.CropManager;
 import com.services.manager.PurchaserManager;
 import com.services.manager.RecordManager;
 import com.services.manager.UserManager;
@@ -43,6 +45,9 @@ public class RestLayer {
 	
 	@Autowired
 	private RecordManager recordManager;
+	
+	@Autowired
+	private CropManager cropManager;
 	
 	/**
 	 * This is a Get Service which takes the username and password and pass it 
@@ -319,6 +324,54 @@ public class RestLayer {
 			logger.error("Exception caught in clearMemory>>>"+ex.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	/**
+	 * This is a Get Service which will return all the list of Crop Name
+	 */
+	@RequestMapping(value = "/getAllCrop" , method = RequestMethod.GET)
+	public ResponseEntity<List<String>> getAllCrop(){
+		List<String> listCrops = null;
+		try{
+			listCrops = cropManager.getAllCrop();
+		}catch(CropManagerException ex){
+			logger.error("Exception caught in get all crop>>>"+ex.getMessage());
+			return new ResponseEntity<List<String>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<List<String>>(listCrops,HttpStatus.OK);		
+	}
+	
+	/**
+	 * This is a post service which takes the Crop Name from the
+	 * Url path. It passes the crop to the manager for removing it from
+	 * the Crop Table
+	 */
+	@RequestMapping(value="/removeCrop/{cropName}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> removeCrop(@PathVariable String cropName){
+		try{
+			cropManager.removeCrop(cropName);
+		}catch(CropManagerException ex){
+			logger.error("Exception caught in removeCrop>>>"+ex.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}	
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	/**
+	 * This is a post service which takes the Crop Name from the
+	 * Url path. It passes the crop to the manager for adding it to
+	 * the Crop Table
+	 */
+	@RequestMapping(value="/addCrop/{cropName}", method = RequestMethod.POST)
+	public ResponseEntity<?> addCrop(@PathVariable String cropName){
+		try{
+			cropManager.addCrop(cropName);
+		}catch(CropManagerException ex){
+			logger.error("Exception caught in addCrop>>>"+ex.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

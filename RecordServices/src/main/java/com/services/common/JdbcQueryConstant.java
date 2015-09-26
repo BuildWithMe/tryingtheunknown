@@ -49,5 +49,13 @@ public class JdbcQueryConstant {
 	public static final String WHERE_RECORD_ID = "WHERE RECORD_ID = ?";
 	
 	public static final String Clear_Memory = "Delete from RECORD where DATE between ? and ?";
+
+	//Crop sqls
+	
+	public static final String Remove_Crop = "Delete from CROP where Crop_Name = ?";
+
+	public static final String Get_All_Crop = "select * from CROP";
+
+	public static final String Query_Add_Crop = "Insert into CROP (Crop_Name) values (?)";
 	
 }
