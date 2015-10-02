@@ -227,7 +227,7 @@ public class RecordDao {
 	}
 	
 	private String getDateAsString(Date date){
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		return sdf.format(date);
 	}
 

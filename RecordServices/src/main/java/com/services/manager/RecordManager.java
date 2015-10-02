@@ -95,7 +95,7 @@ public class RecordManager {
 	 */
 	public List<Record> getAllRecordsForCurrentDate() throws RecordManagerException {
 		List<Record> listRecord = null;
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
 		String currentDate = dateFormat.format(date);
 		try{
@@ -186,7 +186,7 @@ public class RecordManager {
 		Map<String, Object> unpaidTax = new HashMap<String, Object>();
 		Map<String, List<Record>> recordMap = new HashMap<String, List<Record>>();
 		for(Record record : listRecord){
-			String[] arr = record.getDate().split("/");
+			String[] arr = record.getDate().split("-");
 			if(recordMap.containsKey(arr[1])){
 				recordMap.get(arr[1]).add(record);
 			}else{
@@ -215,7 +215,7 @@ public class RecordManager {
 
 	private String getCurrentDate(){
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		return sdf.format(cal.getTime());
 	}	
 
