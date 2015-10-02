@@ -95,7 +95,7 @@ public class RecordManager {
 	 */
 	public List<Record> getAllRecordsForCurrentDate() throws RecordManagerException {
 		List<Record> listRecord = null;
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
 		Date date = new Date();
 		String currentDate = dateFormat.format(date);
 		try{
@@ -137,17 +137,19 @@ public class RecordManager {
 	public GraphResponse getGraphDetails() throws RecordManagerException{
 		GraphResponse response = null;
 		SearchPredicate predicate = new SearchPredicate();
-		StringBuilder startFinancialYear = new StringBuilder("01/04/");
+		String startFinancialMonth = "-04-01";
+		StringBuilder yearStr = null;
 		String currentDate = getCurrentDate();
-		String[] arr = currentDate.split("/");
+		String[] arr = currentDate.split("-");
 		Integer currentMonth = Integer.valueOf(arr[1]);
+		Integer currentYear = Integer.valueOf(arr[0]);
 		if(currentMonth < 4){
-			Integer year = Calendar.getInstance().get(Calendar.YEAR) - 1;
-			startFinancialYear.append(year);
-		}else{
-			startFinancialYear.append(Calendar.getInstance().get(Calendar.YEAR));
+			currentYear = currentYear - 1;
 		}
-		predicate.setStartDate(startFinancialYear.toString());
+		yearStr = new StringBuilder(currentYear.toString());
+		yearStr.append(startFinancialMonth);
+		
+		predicate.setStartDate(yearStr.toString());
 		predicate.setEndDate(currentDate);
 		
 		List<Record> listRecord = null;
@@ -213,7 +215,7 @@ public class RecordManager {
 
 	private String getCurrentDate(){
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
 		return sdf.format(cal.getTime());
 	}	
 
