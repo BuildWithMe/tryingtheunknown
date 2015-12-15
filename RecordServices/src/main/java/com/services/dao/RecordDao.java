@@ -38,6 +38,7 @@ public class RecordDao {
 	public int saveRecord(Record record) throws DaoException{
 		JdbcTemplate template = new JdbcTemplate(datasource);
 		List<Object> paramObjs = new ArrayList<Object>();
+		paramObjs.add(record.getReceiptNbr());
 		paramObjs.add(record.getDate());
 		paramObjs.add(record.getPurchaserName());
 		paramObjs.add(record.getVehicleNbr());
@@ -124,6 +125,7 @@ public class RecordDao {
 		paramObjs.add(record.getPaymentDate());
 		paramObjs.add(record.getPaymentMode());
 		paramObjs.add(record.getPaymentStatus());
+		paramObjs.add(record.getReceiptNbr());
 		
 		StringBuilder sql = new StringBuilder(JdbcQueryConstant.Update_Record);
 		if(PaymentMode.CHECQUE.getId() == record.getPaymentMode()){
@@ -168,6 +170,9 @@ public class RecordDao {
 		if(predicate.getPaymentStatus() != null && !predicate.getPaymentStatus().isEmpty()){
 			sql.append(" and payment_status = '"+predicate.getPaymentStatus()+"'");
 		}
+		if(predicate.getReceiptNbr() != null && !predicate.getReceiptNbr().isEmpty()){
+			sql.append(" and receipt_nbr = '"+predicate.getReceiptNbr()+"'");
+		}
 		
 		try{
 			queryResult = template.queryForList(sql.toString());
@@ -205,6 +210,7 @@ public class RecordDao {
 		for(Map<String, Object> map : queryResult){
 			record = new Record();
 			record.setRecordId((BigDecimal) map.get("RECORD_ID"));
+			record.setReceiptNbr((String) map.get("RECEIPT_NBR"));
 			record.setDate(getDateAsString((Date) map.get("DATE")));
 			record.setPurchaserName((String) map.get("PURCHASER_NAME"));
 			record.setVehicleNbr((String) map.get("VEHICLE_NBR"));

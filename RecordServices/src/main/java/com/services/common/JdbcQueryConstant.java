@@ -34,15 +34,15 @@ public class JdbcQueryConstant {
 	
 	//Record Sqls
 	
-	public static final String Save_Record = "Insert into RECORD (DATE, PURCHASER_NAME, VEHICLE_NBR, CROP_NAME, BAG_QTY, NET_WEIGHT, ACTUAL_WEIGHT, "
+	public static final String Save_Record = "Insert into RECORD (RECEIPT_NBR, DATE, PURCHASER_NAME, VEHICLE_NBR, CROP_NAME, BAG_QTY, NET_WEIGHT, ACTUAL_WEIGHT, "
 			+ "CROP_RATE, TOTAL_COST, MARKET_FEE, SUPERVISION_FEE, TOTAL_TAX, PAYMENT_DATE, PAYMENT_MODE, PAYMENT_STATUS, CHECQUE_NBR) "
-			+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
 	public static final String Get_All_Record_For_Current_Date = "select * from RECORD where DATE = ?";
 	
 	public static final String Delete_Record = "Delete from RECORD where RECORD_ID = ?";
 	
-	public static final String Update_Record = "Update Record set PAYMENT_DATE = ?, PAYMENT_MODE = ?, PAYMENT_STATUS = ? ";
+	public static final String Update_Record = "Update Record set PAYMENT_DATE = ?, PAYMENT_MODE = ?, PAYMENT_STATUS = ?, RECEIPT_NBR = ?";
 	
 	public static final String Add_Checque_Nbr = ", CHECQUE_NBR = ? ";
 	

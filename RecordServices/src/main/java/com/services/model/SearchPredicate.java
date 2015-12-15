@@ -11,6 +11,8 @@ public class SearchPredicate {
 	private String cropName;
 	
 	private String paymentStatus;
+	
+	private String receiptNbr;
 
 	public String getStartDate() {
 		return startDate;
@@ -50,6 +52,14 @@ public class SearchPredicate {
 
 	public void setPaymentStatus(String paymentStatus) {
 		this.paymentStatus = paymentStatus;
+	}
+
+	public String getReceiptNbr() {
+		return receiptNbr;
+	}
+
+	public void setReceiptNbr(String receiptNbr) {
+		this.receiptNbr = receiptNbr;
 	}
 
 }
