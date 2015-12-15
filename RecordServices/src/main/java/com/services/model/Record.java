@@ -14,6 +14,8 @@ public class Record {
 	
 	private BigDecimal recordId;
 	
+	private String receiptNbr;
+	
 	private String date;
 	
 	private String purchaserName;
@@ -181,6 +183,14 @@ public class Record {
 
 	public void setTotalTax(BigDecimal totalTax) {
 		this.totalTax = totalTax;
+	}
+
+	public String getReceiptNbr() {
+		return receiptNbr;
+	}
+
+	public void setReceiptNbr(String receiptNbr) {
+		this.receiptNbr = receiptNbr;
 	}
 
 
