@@ -98,7 +98,7 @@ public class RestLayer {
 	/**
 	 * This is a post service which takes the User object from the
 	 * Request Body. It passes the User Object to the manager for removing it from
-	 * the User Table
+	 * the User_Table
 	 */
 	@RequestMapping(value="/removeUser", method = RequestMethod.POST)
 	public ResponseEntity<String> removeUser(@RequestBody User user){
